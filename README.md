@@ -77,7 +77,6 @@ Aplikasi To-Do List yang modern dan sederhana dengan desain Neumorphism, built d
 to-do-list/
 ├── index.php              # File utama aplikasi
 ├── README.md              # Dokumentasi proyek
-├── .gitignore             # File ignore untuk Git
 ├── assets/
 │   ├── css/
 │   │   └── style.css      # File CSS styling
@@ -197,9 +196,10 @@ Proyek ini dilisensikan di bawah **MIT License**. Lihat file `LICENSE` untuk det
 ## 📞 Contact
 
 Jika Anda memiliki pertanyaan atau saran, silakan hubungi:
-- **Email**: [your-email@example.com]
-- **GitHub**: [your-github-username]
+- **Email**: elfian.rasyid@gmail.com
+- **GitHub**: ar-elfahmi
 
 ---
+
 
 **Built with ❤️ using HTML, CSS, and JavaScript**
