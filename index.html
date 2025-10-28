@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List - Modern & Simple</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="light-mode">
+    <!-- Background Estetis -->
+    <div class="background-overlay"></div>
+    
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <button id="darkModeToggle" class="neu-button">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Container Utama -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="app-title">
+                    <i class="fas fa-tasks"></i>
+                    To-Do List
+                </h1>
+                <div class="header-actions">
+                    <button id="addTaskBtn" class="neu-button small" title="Tambah Task">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button id="exportBtn" class="neu-button small" title="Export Data">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button id="importBtn" class="neu-button small" title="Import Data">
+                        <i class="fas fa-upload"></i>
+                    </button>
+                    <button id="clearAllBtn" class="neu-button small danger" title="Hapus Semua Task">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-section">
+            <div class="progress-info">
+                <span class="progress-text">Progress: <span id="progressText">0%</span></span>
+                <span class="task-count">(<span id="completedCount">0</span>/<span id="totalCount">0</span> selesai)</span>
+            </div>
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Filter & Sort Section -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label class="filter-label">Filter:</label>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-list"></i> Semua
+                    </button>
+                    <button class="filter-btn" data-filter="active">
+                        <i class="fas fa-clock"></i> Aktif
+                    </button>
+                    <button class="filter-btn" data-filter="completed">
+                        <i class="fas fa-check"></i> Selesai
+                    </button>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Prioritas:</label>
+                <div class="priority-filters">
+                    <button class="priority-filter-btn active" data-priority="all">
+                        <i class="fas fa-star"></i> Semua
+                    </button>
+                    <button class="priority-filter-btn" data-priority="high">
+                        <i class="fas fa-exclamation-circle"></i> Tinggi
+                    </button>
+                    <button class="priority-filter-btn" data-priority="medium">
+                        <i class="fas fa-minus-circle"></i> Sedang
+                    </button>
+                    <button class="priority-filter-btn" data-priority="low">
+                        <i class="fas fa-arrow-down"></i> Rendah
+                    </button>
+                </div>
+            </div>
+
+            <div class="sort-group">
+                <label class="filter-label">Sort:</label>
+                <select id="sortSelect" class="neu-select">
+                    <option value="date-desc">Terbaru</option>
+                    <option value="date-asc">Terlama</option>
+                    <option value="priority-high">Prioritas Tinggi</option>
+                    <option value="priority-medium">Prioritas Sedang</option>
+                    <option value="priority-low">Prioritas Rendah</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Quick Add Section -->
+        <div class="quick-add-section">
+            <div class="quick-add-form">
+                <input type="text" id="quickAddInput" placeholder="Tambah task dengan Enter..." class="neu-input">
+                <button id="quickAddBtn" class="neu-button">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Task List -->
+        <div class="task-list" id="taskList">
+            <!-- Task items akan di-generate oleh JavaScript -->
+        </div>
+
+        <!-- Add Task Modal -->
+        <div id="addTaskModal" class="modal">
+            <div class="modal-content neu-card">
+                <div class="modal-header">
+                    <h3>Tambah Task Baru</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="addTaskForm">
+                    <div class="form-group">
+                        <label for="taskTitle">Judul Task:</label>
+                        <input type="text" id="taskTitle" required class="neu-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">Deskripsi:</label>
+                        <textarea id="taskDescription" rows="3" class="neu-textarea"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskPriority">Prioritas:</label>
+                        <select id="taskPriority" class="neu-select">
+                            <option value="low">Rendah</option>
+                            <option value="medium" selected>Sedang</option>
+                            <option value="high">Tinggi</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="neu-button primary">
+                            <i class="fas fa-plus"></i> Tambah Task
+                        </button>
+                        <button type="button" class="neu-button secondary close-modal">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Task Modal -->
+        <div id="editTaskModal" class="modal">
+            <div class="modal-content neu-card">
+                <div class="modal-header">
+                    <h3>Edit Task</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="editTaskForm">
+                    <input type="hidden" id="editTaskId">
+                    <div class="form-group">
+                        <label for="editTaskTitle">Judul Task:</label>
+                        <input type="text" id="editTaskTitle" required class="neu-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="editTaskDescription">Deskripsi:</label>
+                        <textarea id="editTaskDescription" rows="3" class="neu-textarea"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTaskPriority">Prioritas:</label>
+                        <select id="editTaskPriority" class="neu-select">
+                            <option value="low">Rendah</option>
+                            <option value="medium">Sedang</option>
+                            <option value="high">Tinggi</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="neu-button primary">
+                            <i class="fas fa-save"></i> Simpan Perubahan
+                        </button>
+                        <button type="button" class="neu-button secondary close-modal">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="modal">
+            <div class="modal-content neu-card">
+                <div class="modal-header">
+                    <h3>Konfirmasi Hapus</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <p>Apakah Anda yakin ingin menghapus task ini?</p>
+                <div class="form-actions">
+                    <button id="confirmDelete" class="neu-button danger">
+                        <i class="fas fa-trash"></i> Hapus
+                    </button>
+                    <button class="neu-button secondary close-modal">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import/Export Modal -->
+        <div id="importExportModal" class="modal">
+            <div class="modal-content neu-card">
+                <div class="modal-header">
+                    <h3>Import/Export Data</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="import-export-content">
+                    <div class="export-section">
+                        <h4>Export Data</h4>
+                        <button id="exportDataBtn" class="neu-button primary">
+                            <i class="fas fa-download"></i> Download JSON
+                        </button>
+                    </div>
+                    <div class="import-section">
+                        <h4>Import Data</h4>
+                        <input type="file" id="importFile" accept=".json" class="neu-input">
+                        <button id="importDataBtn" class="neu-button primary">
+                            <i class="fas fa-upload"></i> Import JSON
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clear All Confirmation Modal -->
+        <div id="clearAllModal" class="modal">
+            <div class="modal-content neu-card">
+                <div class="modal-header">
+                    <h3>Konfirmasi Hapus Semua</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <p>Apakah Anda yakin ingin menghapus SEMUA task? Tindakan ini tidak dapat dibatalkan.</p>
+                <div class="form-actions">
+                    <button id="confirmClearAll" class="neu-button danger">
+                        <i class="fas fa-trash-alt"></i> Hapus Semua
+                    </button>
+                    <button class="neu-button secondary close-modal">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="loading-screen">
+            <div class="loading-content">
+                <div class="loading-spinner">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h3>Memuat Aplikasi...</h3>
+                <p>Sedang menyiapkan to-do list Anda</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
